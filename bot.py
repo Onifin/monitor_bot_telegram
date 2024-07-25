@@ -1,7 +1,9 @@
 import telebot
 import google.generativeai as genai
+import requests
 from dotenv import load_dotenv
 import os
+from api import get_alunos, get_token
 
 # Carregar as variáveis do arquivo .env
 load_dotenv()
@@ -29,6 +31,9 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
+    numero = message
+    print(get_token())
+    #print(message.chat.id)
     response = model.generate_content(message.text)
     bot.reply_to(message, response.text)
 
