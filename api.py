@@ -6,7 +6,7 @@ import os
 load_dotenv()
 
 api_url = os.getenv('API_BOT')
-email = os.getenv('USER_EMAIL ')
+email = os.getenv('USER_EMAIL')
 senha = os.getenv('USER_PASSWORD')
 
 def get_token():
@@ -18,8 +18,8 @@ def get_token():
 
     # Dados de autenticação
     auth_data = {
-        "email": str(email),
-        "password": str(senha)
+        "email": email,
+        "password": senha
     }
 
     # Faz a solicitação POST
