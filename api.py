@@ -13,11 +13,13 @@ def get_token():
     # URL da API
     url = f"{api_url}api/v1/users/login"
     print(url)
+    print(email)
+    print(senha)
 
     # Dados de autenticação
     auth_data = {
-        "email": email,
-        "password": senha
+        "email": str(email),
+        "password": str(senha)
     }
 
     # Faz a solicitação POST
