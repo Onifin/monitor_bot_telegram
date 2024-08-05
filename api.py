@@ -1,20 +1,17 @@
 import requests
 from dotenv import load_dotenv
-import os
+from decouple import config
 
 # Carregar as variáveis do arquivo .env
-load_dotenv()
 
-api_url = os.getenv('API_BOT')
-email = os.getenv('USER_EMAIL')
-senha = os.getenv('USER_PASSWORD')
+api_url = config('API1_BOT')
+email = config('USER_EMAIL')
+senha = config('USER_PASSWORD')
+
 
 def get_token():
     # URL da API
     url = f"{api_url}api/v1/users/login"
-    print(url)
-    print(email)
-    print(senha)
 
     # Dados de autenticação
     auth_data = {
@@ -29,31 +26,79 @@ def get_token():
     if response.status_code == 200:
         # Converte a resposta para JSON
         data = response.json()
-        
-        print(data['message']) 
+    
         # Retorna o token
         return data['token']['access_token'] 
     else:
         print(f"Erro ao obter o token: {response.status_code}")
         return None
 
-def get_alunos():
+api_token = get_token()
 
-    response = requests.get(api_url+"api/v1/alunos/lista_alunos/")
+def get_alunos():
+    
+    headers = {
+    "Authorization": f"Bearer {api_token}"
+    }
+
+    response = requests.get(api_url+"api/v1/alunos/lista_alunos/", headers=headers)
+   
+    return(response)
+
+def create_telegram_id(matricula, id):
+
+    headers = {
+    "Authorization": f"Bearer {api_token}"
+    }
+
+    data = {    
+        "matricula": matricula,
+        "telefone": id
+    }
+
+    response = requests.post(api_url+"api/v1/whatsapp/adicionar_numero", headers=headers, json=data)
 
     return(response)
 
-def cria_usuario(email, senha):
-
-    data = {
-        "email": email,
-        "username": "IAN",
-        "id_discord": "12345",
-        "password": senha
+def get_telegram_id(matricula):
+    headers = {
+    "Authorization": f"Bearer {api_token}"
     }
 
-    print(api_url)
+    data = {    
+        "matricula": matricula
+    }
 
-    response = requests.post(api_url+"api/v1/users/adiciona", json=data)
+    response = requests.post(api_url+"api/v1/whatsapp/obter_numero/", headers=headers, json=data)
+
+    return(response)
+
+def delete_telegram_id(matricula):
+    headers = {
+    "Authorization": f"Bearer {api_token}"
+    }
+
+    data = {    
+        "matricula": matricula
+    }
+
+    response = requests.delete(api_url+"/api/v1/whatsapp/excluir_numero/", headers=headers, json=data)
+
+    return(response)
+    
+def cadastrar_frequencia(matricula, turma):
+    #A função retorna 400 caso tente registrar a presença de um aluno que não tem aulas nesse horário
+
+    headers = {
+        "Authorization": f"Bearer {api_token}"
+    }
+
+    data = {
+        "matricula": matricula,
+        "sigla": turma
+    }
+
+    # Faz a solicitação POST
+    response = requests.post(api_url+"api/v1/presenca/", headers=headers, json=data)
 
     return(response)
