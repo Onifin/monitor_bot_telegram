@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 import os
 
 from api import get_alunos, get_token, create_telegram_id, cadastrar_frequencia
-from utils import check_registration, get_class, get_matricula
-from history import *
+from utils import check_registration, get_class, get_matricula, get_nome
+from history import history, history_handler
 
 # Carregar as variáveis do arquivo .env
 load_dotenv()
@@ -50,7 +50,7 @@ def presenca(message):
     if "detail" in response_dict:
         bot.reply_to(message, response_dict["detail"])
     elif "mensagem" in response_dict:
-        bot.reply_to(message, response_dict["mensagem"])
+        bot.reply_to(message, response_dict["mensagem"]+": "+get_nome(id))
     else:
         bot.reply_to(message, "Ocorreu um erro inesperado. Tente novamente mais tarde.")
 

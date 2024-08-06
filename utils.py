@@ -36,5 +36,17 @@ def get_matricula(id):
                 return(alunos[key]["matricula"])
     
     return(None)
+
+def get_nome(id):
+
+    requisicao = get_alunos()
+    alunos = requisicao.json()
+
+    for key in alunos:
+        if "telefone" in alunos[key]:
+            if(alunos[key]["telefone"] == id):
+                return(alunos[key]["nome"])
+    
+    return(None)
     
     
